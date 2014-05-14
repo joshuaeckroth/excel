@@ -10,8 +10,7 @@
 ;; The function definitions progress from handling cells to rows, to sheets,
 ;; to workbooks.
 (ns ontodev.excel
-  (:require [clojure.tools.logging :as log]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [clojure.java.io :as io])
   (:import
     (org.apache.poi.ss.usermodel Cell Row Sheet Workbook WorkbookFactory)))
@@ -72,12 +71,10 @@
   ([workbook] (read-sheet workbook "Sheet1" 1))
   ([workbook sheet-name] (read-sheet workbook sheet-name 1))
   ([workbook sheet-name header-row]
-   (log/debugf "Reading sheet '%s'" sheet-name)
    (let [sheet   (.getSheet workbook sheet-name)
          rows    (->> sheet (.iterator) iterator-seq (drop (dec header-row)))
          headers (map to-keyword (read-row (first rows)))
          data    (map read-row (rest rows))]
-     (log/debugf "Read %d rows" (count rows))
      (vec (map (partial zipmap headers) data)))))
 
 (defn list-sheets
@@ -99,7 +96,6 @@
 (defn load-workbook
   "Load a workbook from a string path."
   [path]
-  (log/info "Loading workbook:" path)
   (doto (WorkbookFactory/create (io/input-stream path))
         (.setMissingCellPolicy Row/CREATE_NULL_AS_BLANK)))
 
