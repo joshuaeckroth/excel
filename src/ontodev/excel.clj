@@ -27,7 +27,7 @@
 (defn get-cell-string-value
   "Get the value of a cell as a string, by changing the cell type to 'string'
    and then changing it back."
-  [cell]
+  [^Cell cell]
   (let [ct    (.getCellType cell)
         _     (.setCellType cell Cell/CELL_TYPE_STRING)
         value (.getStringCellValue cell)]
@@ -56,9 +56,9 @@
 
 (defn read-row
   "Read all the cells in a row (including blanks) and return a list of values."
-  [row]
+  [^Row row]
   (for [i (range 0 (.getLastCellNum row))]
-       (get-cell-string-value (.getCell row (.intValue i)))))
+       (get-cell-string-value (.getCell row i))))
 
 ;; ## Sheets
 ;; Workbooks are made up of sheets, which are made up of rows.
@@ -68,9 +68,9 @@
    and optional header row number (default is '1'),
    return the data in the sheet as a vector of maps
    using the headers from the header row as the keys."
-  ([workbook] (read-sheet workbook "Sheet1" 1))
-  ([workbook sheet-name] (read-sheet workbook sheet-name 1))
-  ([workbook sheet-name header-row]
+  ([^Workbook workbook] (read-sheet workbook "Sheet1" 1))
+  ([^Workbook workbook sheet-name] (read-sheet workbook sheet-name 1))
+  ([^Workbook workbook sheet-name header-row]
    (let [sheet   (.getSheet workbook sheet-name)
          rows    (->> sheet (.iterator) iterator-seq (drop (dec header-row)))
          headers (map to-keyword (read-row (first rows)))
@@ -79,13 +79,13 @@
 
 (defn list-sheets
   "Return a list of all sheet names."
-  [workbook]
+  [^Workbook workbook]
   (for [i (range (.getNumberOfSheets workbook))]
     (.getSheetName workbook i)))
 
 (defn sheet-headers
   "Returns the headers (in their original forms, not as keywords) for a given sheet."
-  [workbook sheet-name]
+  [^Workbook workbook sheet-name]
   (let [sheet (.getSheet workbook sheet-name)
         rows (->> sheet (.iterator) iterator-seq)]
     (read-row (first rows))))
