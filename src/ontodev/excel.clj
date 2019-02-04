@@ -13,7 +13,7 @@
   (:require [clojure.string :as string]
             [clojure.java.io :as io])
   (:import
-    (org.apache.poi.ss.usermodel Cell Row Sheet Workbook WorkbookFactory)))
+    (org.apache.poi.ss.usermodel Cell Row Row$MissingCellPolicy Sheet Workbook WorkbookFactory)))
 
 ;; ## Cells
 ;; I've found it hard to trust the Cell Type and Cell Style for data such as
@@ -97,6 +97,6 @@
   "Load a workbook from a string path."
   [path]
   (doto (WorkbookFactory/create (io/input-stream path))
-        (.setMissingCellPolicy Row/CREATE_NULL_AS_BLANK)))
+        (.setMissingCellPolicy Row$MissingCellPolicy/CREATE_NULL_AS_BLANK)))
 
 
