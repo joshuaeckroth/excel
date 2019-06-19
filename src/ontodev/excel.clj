@@ -13,7 +13,7 @@
   (:require [clojure.string :as string]
             [clojure.java.io :as io])
   (:import
-    (org.apache.poi.ss.usermodel Cell Row Row$MissingCellPolicy Sheet Workbook WorkbookFactory)))
+    (org.apache.poi.ss.usermodel Cell CellType Row Row$MissingCellPolicy Sheet Workbook WorkbookFactory)))
 
 ;; ## Cells
 ;; I've found it hard to trust the Cell Type and Cell Style for data such as
@@ -29,7 +29,7 @@
    and then changing it back."
   [^Cell cell]
   (let [ct    (.getCellType cell)
-        _     (.setCellType cell Cell/CELL_TYPE_STRING)
+        _     (.setCellType cell CellType/STRING)
         value (.getStringCellValue cell)]
     (.setCellType cell ct)
     value))
